@@ -1,0 +1,12 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "9292:9292"
+    volumes:
+      - .:/app
+    tty: true
+    stdin_open: true
+    environment:
+      - RACK_ENV=development
