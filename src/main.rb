@@ -3,10 +3,12 @@ require 'open3'
 
 class Main < Grape::API
   format :json
-  get '/' do
-    request = JSON.parse(Rack::Request.new(env).body.read)
-    source_code = request['source_code']
-    input = request['input']
+  post '/' do
+    request_body = request.body.read
+    request_payload = JSON.parse(request_body)
+
+    source_code = request_payload['source_code']
+    input = request_payload['input']
 
     # main.rs にソースコードを書き込む
     File.open('/app/rust/src/main.rs', 'w') do |file|
@@ -22,8 +24,9 @@ class Main < Grape::API
     command += "/root/.cargo/bin/cargo run --release < input.txt"
 
     # 実行時間を計測する
+    start_time = Time.now
     result, err, status = Open3.capture3(command)
-
+    end_time = Time.now
 
     if status.exitstatus != 0
       return { error: err.to_s, result: result }
