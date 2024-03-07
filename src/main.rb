@@ -11,16 +11,16 @@ class Main < Grape::API
     input = request_payload['input']
 
     # main.rs にソースコードを書き込む
-    File.open('/app/rust/src/main.rs', 'w') do |file|
+    File.open('./rust/src/main.rs', 'w') do |file|
       file.write(source_code)
     end
 
     # input.txt に入力を書き込む
-    File.open('/app/rust/input.txt', 'w') do |file|
+    File.open('./rust/input.txt', 'w') do |file|
       file.write(input)
     end
 
-    command = "cd /app/rust;"
+    command = "cd ./rust;"
     command += "/root/.cargo/bin/cargo run --release < input.txt"
 
     # 実行時間を計測する
